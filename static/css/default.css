@@ -1,0 +1,104 @@
+body {
+    background-color: #eee;
+    margin: 0;
+    padding: 0;
+}
+
+#content {
+    clear: both;
+}
+
+#sidebar {
+    float: left;
+    width: 200px;
+}
+
+#status-bar {
+    height: 1em;
+    border-top: 1px solid #aaa;
+    background-color: #eee;
+}
+
+#view {
+    background-color: #fff;
+    border-radius: 5px;
+    border-top: 1px solid #aaa;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-right: 5%;
+}
+
+#view .ui-selecting {
+    background-color: #2677ff;
+    border-radius: 3px;
+}
+
+#view .ui-selected {
+    background-color: #2677ff;
+    border-radius: 3px;
+}
+
+#view .ui-selected:hover {
+    color: #fff;
+}
+
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border:1px solid #000099;
+    background-color: #2677ff;
+    opacity: 0.3;
+}
+
+#breadcrumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#breadcrumbs li {
+    display: inline-block;
+    background-color: #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    border-top: 1px solid #aaa;
+}
+
+.icon {
+    display: inline-block;
+    padding-top: 64px;
+    width: 64px;
+    background-size: 64px 64px;
+    background-repeat: no-repeat;
+    background-position: top;
+    text-align: center;
+    vertical-align: top;
+    margin: 12px;
+    word-wrap: break-word;
+    text-decoration: none;
+    color: #111;
+}
+
+.icon:hover {
+    color: #2677ff;
+}
+
+.folder {
+    background-image: url('../icons/folder.png');
+}
+
+.document {
+    background-image: url('../icons/document.png');
+}
+
+#topnav {
+    clear: both;
+}
+
+#navbuttons {
+    float: left;
+    width: 200px;
+}

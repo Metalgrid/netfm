@@ -52,3 +52,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# KDevelop4 projects and cache
+*.kdev4
+.kdev4
+
+# Temporary files and backups
+*~
+.bak
+.old

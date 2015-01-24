@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Network file manager</title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.contextMenu.css') }}"/>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.11.2.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ui.position.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.contextMenu.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.11.2.min.js') }}"></script>
+        <!--<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.drag-multiple.min.js') }}"></script>-->
+    </head>
+    <body>
+    <h3>NetFM - Full-blown file manager in a browser</h3>
+        <div id="topbar">
+            <div id="navbuttons">
+            <button id="nav-back">&laquo;</button>
+            <button id="nav-forward" disabled>&raquo;</button>
+            <button id="nav-refresh" disabled>refresh</button>
+            <select id="nav-view">
+                <option>-- View --</option>
+                <option>Tiles</option>
+                <option>List</option>
+            </select>
+            </div>
+            <ul id="breadcrumbs">
+                <li><a href="/">Home</a></li>
+                {% for crumb in breadcrumbs %}
+                <li><a href="{{ '/' + '/'.join(breadcrumbs[0:loop.index]) }}">{{ crumb }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="content">
+            <div id="sidebar">
+                <ul>
+                    <li><b>Bookmarks</b></li>
+                    <li>My favorite place</li>
+                    <li>Projects</li>
+                    <li>Music</li>
+                </ul>
+            </div>
+            <div id="view">
+                {% for entry in dirlist %}
+                <a class="icon {{ 'folder' if isdir(entry) else 'document' }}" href="{{ request.path + entry + "/" }}">{{ entry }}</a>
+                {% endfor %}
+                <div id="status-bar">Selected: 0
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        // Context menus
+            $.contextMenu({
+            selector: '.icon',
+            callback: function(key, options) {
+                console.log("Clicked: " + key)
+            },
+            items: {
+                open: {
+                    name: "Open",
+                    callback: function(key, opts) {
+                        console.log($(this).text());
+                        }
+                },
+                separator: "-----------",
+                rename: {
+                    name: "Rename",
+                    callback: function(key, opts) {
+                        var name = prompt("Input new name:");
+                        console.log("Renaming " + $(this).text() + " to " + name);
+                    }
+                }
+            }
+        });
+        $.contextMenu({
+            selector: 'body',
+            items: {
+                'newdoc': {
+                    name: "New document",
+                    callback: function(key, opts) {
+                        var name = prompt("New document name:");
+                        console.log(name);
+                    }
+                },
+                'newfolder': {
+                    name: "New directory",
+                    callback: function(key, opts) {
+                    var name = prompt("New folder name:");
+                    if (!name)
+                        return false;
+                    $.post({
+                        url: "/__api/folder",
+                        data: {name: name}
+                        }
+                    )
+                    }
+                }
+            }
+        });
+        // Drag and drop
+        $(".icon").draggable({revert: 'invalid'});
+        $(".ui-selected").draggable({revert: 'invalid'});
+        $(".folder").droppable({
+            drop: function(event, ui) {
+                console.log("Moving " + $(this).text() + " to " + ui.draggable);
+            }
+        });
+        // Selectable items in view
+        $("#view").selectable({
+            cancel: "#status-bar",
+            selecting: function(event, ui) {
+                if (ui.selecting.id == "status-bar") {
+                    $(ui.selecting).removeClass("ui-selecting")
+                    }
+                    $("#status-bar").text("Selected: " + $(".ui-selecting").length)
+                },
+            stop: function(event ,ui) {
+                $("#status-bar").text("Selected: " + $(".ui-selected").length)
+                }
+            });
+        </script>
+    </body>
+</html>
