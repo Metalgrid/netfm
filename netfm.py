@@ -17,7 +17,6 @@ def path(pathstr):
     if 'topdir' not in session:
         session['topdir'] = os.path.realpath(os.curdir)
     os.chdir(session.get('topdir'))
-    app.logger.debug(session)
     path = pathstr.split('/')
     if '' in path:
         path.remove('')
@@ -60,8 +59,22 @@ def path(pathstr):
         )
 
 
-def server():
+@app.route("/__netfm_api/folder/", methods=['GET', 'POST'])
+def folder_api():
+    action = request.form.get('action', None)
+    target = request.form.get('target', None)
+    if not action or not target:
+        return jsonify({'message': "Invalid action or target!"}), 500
+    if action == 'new':
+        try:
+            os.mkdir(target)
+            return jsonify({'message': "Directory %s created" % target})
+        except OSError as e:
+            return jsonify({'message': str(e)}), 500
+
+
+def run():
     app.run(host="0.0.0.0", port=8080, debug=True)
 
 if __name__ == "__main__":
-    server()
+    run()

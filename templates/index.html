@@ -9,15 +9,14 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.ui.position.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.contextMenu.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.11.2.min.js') }}"></script>
-        <!--<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.drag-multiple.min.js') }}"></script>-->
     </head>
     <body>
     <h3>NetFM - Full-blown file manager in a browser</h3>
         <div id="topbar">
             <div id="navbuttons">
             <button id="nav-back">&laquo;</button>
-            <button id="nav-forward" disabled>&raquo;</button>
-            <button id="nav-refresh" disabled>refresh</button>
+            <button id="nav-forward">&raquo;</button>
+            <button id="nav-refresh">refresh</button>
             <select id="nav-view">
                 <option>-- View --</option>
                 <option>Tiles</option>
@@ -48,55 +47,12 @@
                 </div>
             </div>
         </div>
+        <div id="dialog"></div>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/netfm-contextMenu.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/netfm-navButtons.js') }}"></script>
+<!--        <script type="text/javascript" src="{{ url_for('static', filename='js/netfm-dialogs.js') }}"></script>-->
         <script type="text/javascript">
-        // Context menus
-            $.contextMenu({
-            selector: '.icon',
-            callback: function(key, options) {
-                console.log("Clicked: " + key)
-            },
-            items: {
-                open: {
-                    name: "Open",
-                    callback: function(key, opts) {
-                        console.log($(this).text());
-                        }
-                },
-                separator: "-----------",
-                rename: {
-                    name: "Rename",
-                    callback: function(key, opts) {
-                        var name = prompt("Input new name:");
-                        console.log("Renaming " + $(this).text() + " to " + name);
-                    }
-                }
-            }
-        });
-        $.contextMenu({
-            selector: 'body',
-            items: {
-                'newdoc': {
-                    name: "New document",
-                    callback: function(key, opts) {
-                        var name = prompt("New document name:");
-                        console.log(name);
-                    }
-                },
-                'newfolder': {
-                    name: "New directory",
-                    callback: function(key, opts) {
-                    var name = prompt("New folder name:");
-                    if (!name)
-                        return false;
-                    $.post({
-                        url: "/__api/folder",
-                        data: {name: name}
-                        }
-                    )
-                    }
-                }
-            }
-        });
+ 
         // Drag and drop
         $(".icon").draggable({revert: 'invalid'});
         $(".ui-selected").draggable({revert: 'invalid'});
@@ -114,6 +70,9 @@
                     }
                     $("#status-bar").text("Selected: " + $(".ui-selecting").length)
                 },
+            unselecting: function(event, ui) {
+                $("#status-bar").text("Selected: " + $(".ui-selecting").length)
+            },
             stop: function(event ,ui) {
                 $("#status-bar").text("Selected: " + $(".ui-selected").length)
                 }
